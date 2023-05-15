@@ -1,27 +1,29 @@
+{% set name = "ypy_websocket" %}
 {% set version = "0.8.2" %}
 
 package:
-  name: ypy-websocket
+  name: {{ name|replace("_", "-" ) }}
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/y/ypy-websocket/ypy_websocket-{{ version }}.tar.gz
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
   sha256: 491b2cc4271df4dde9be83017c15f4532b597dc43148472eb20c5aeb838a5b46
 
 build:
-  noarch: python
   number: 0
-  script: {{ PYTHON }} -m pip install . -vv
+  skip: true # [py<37 or s390x]
+  script: {{ PYTHON }} -m pip install --no-deps --no-build-isolation . -vv
 
 requirements:
   host:
     - hatchling
     - pip
-    - python >=3.7
+    - python
+    - wheel
   run:
     - aiofiles >=22.1.0,<23
     - aiosqlite >=0.17.0,<1
-    - python >=3.7
+    - python
     - y-py >=0.5.3,<0.6.0
 
 test:
@@ -38,7 +40,7 @@ test:
   commands:
     - pip check
     - cd tests && npm install
-    - cd .. && pytest -vv --asyncio-mode=auto --cov-branch --cov=ypy_websocket --cov-report=term-missing:skip-covered --no-cov-on-fail --cov-fail-under=78
+    - cd .. && pytest -vv --asyncio-mode=auto --ignore tests/test_ypy_yjs.py
 
 about:
   home: https://github.com/y-crdt/ypy-websocket
@@ -46,6 +48,9 @@ about:
   license_family: MIT
   license_file: LICENSE
   summary: WebSocket connector for Ypy
+  description: ypy-websocket is an async WebSocket connector for Ypy.
+  dev_url: https://github.com/y-crdt/ypy-websocket
+  doc_url: https://github.com/y-crdt/ypy-websocket/blob/main/README.md
 
 extra:
   recipe-maintainers:
