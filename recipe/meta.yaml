@@ -33,7 +33,6 @@ test:
     - nodejs >=18,<19
     - pip
     - pytest-asyncio
-    - pytest-cov
     - websockets >=10.0
   imports:
     - ypy_websocket
